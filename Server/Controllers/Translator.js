@@ -12,8 +12,8 @@ const addmessage = async (req, res) => {
   const options = {
     method: 'POST',
     headers: {
-      'x-rapidapi-key': '34381b8984mshd75a1b2014c2aa4p165b85jsncde73e638de3', // Replace with your actual API key
-      'x-rapidapi-host': 'cheapest-gpt-4-turbo-gpt-4-vision-chatgpt-openai-ai-api.p.rapidapi.com',
+      'x-rapidapi-key': '1b63b7b72amsh966479ac130ad33p1bfa36jsnfacc6aeb89e5', // Replace with your actual API key
+      'x-rapidapi-host': 'cheapest-gpt-4-turbo-gpt-4-vision-chatgpt-openai-ai-api.p.rapidapi.comcheapest-gpt-4-turbo-gpt-4-vision-chatgpt-openai-ai-api.p.rapidapi.com',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({

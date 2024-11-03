@@ -5,25 +5,35 @@ import Cookies from "js-cookie";
 
 export default function RoadMap() {
   const [activeLevel, setActiveLevel] = useState(null);
+  const [score, setScore] = useState(0);
+  const [fruitscore, setFruitscore] = useState(0);
+  const [isThirdUnlocked, setIsThirdUnlocked] = useState(false);
+  const [showCongrats, setShowCongrats] = useState(false);
+
+  useEffect(() => {
+    // Get scores from cookies
+    const storedScore = Cookies.get("quizScore");
+    if (storedScore) {
+      setScore(parseInt(storedScore, 10));
+    }
+
+    const storedFruitScore = Cookies.get("fruitscore");
+    if (storedFruitScore) {
+      setFruitscore(parseInt(storedFruitScore, 10));
+    }
+  }, []);
+
+  useEffect(() => {
+    // Unlock third module if both scores are 3/3
+    if (score === 3 && fruitscore === 3) {
+      setIsThirdUnlocked(true);
+      setShowCongrats(true);
+    }
+  }, [score, fruitscore]);
 
   const handleClick = (level) => {
     setActiveLevel(level);
   };
-
-  const [score, setScore] = useState(0);
-  const [fruitscore, setFruitscore] = useState(0);
-
-  useEffect(() => {
-    // Get quizScore from cookie
-    const storedScore = Cookies.get('quizScore');
-    if (storedScore) {
-      setScore(parseInt(storedScore, 10)); // Convert the score to an integer
-    }
-    const storedFruitScore = Cookies.get('fruitscore');
-    if (storedFruitScore) {
-      setFruitscore(parseInt(storedFruitScore, 10)); // Convert the score to an integer
-    }
-  }, []);
 
   return (
     <div className="absolute left-48 top-20">
@@ -70,7 +80,7 @@ export default function RoadMap() {
                 </h1>
                 <p>In this module, you will learn the basics of colors in English.</p>
               </div>
-              <div>
+              <div className="relative left-28">
                 You completed {score} /3
               </div>
             </div>
@@ -101,9 +111,19 @@ export default function RoadMap() {
           </a>
         </div>
 
-        <div className="relative top-4">
-          <a href="/test22" className="">
-            <div className="flex gap-4 border py-6 px-10 rounded-xl shadow-lg">
+        <div className={`relative top-4 ${isThirdUnlocked ? "" : "opacity-50 cursor-not-allowed"}`}>
+          <a href="/test22" className={isThirdUnlocked ? "" : "pointer-events-none"}>
+            <div className="flex gap-4 border py-6 px-10 rounded-xl shadow-lg relative">
+              {!isThirdUnlocked && (
+                <div className="absolute inset-0 bg-white bg-opacity-80 rounded-xl flex items-center justify-center z-10">
+                  <span className="text-gray-700 text-lg font-semibold flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 11c0-1.657-1.343-3-3-3s-3 1.343-3 3v3m6 0H9m6 0h-1m0-7h-1.586a1 1 0 00-.707.293l-4.293 4.293a1 1 0 000 1.414l4.293 4.293a1 1 0 00.707.293H13m0 0h1m0 0a3 3 0 013 3h1m-1 0h-1" />
+                    </svg>
+                    Locked
+                  </span>
+                </div>
+              )}
               <div>
                 <img
                   className="h-20 rounded-2xl"
@@ -111,17 +131,23 @@ export default function RoadMap() {
                   alt=""
                 />
               </div>
-              <div>
-                <h3 className="font-semibold">Step 3</h3>
-                <h1 className="font-bold text-xl pb-1">
+              <div className="pl-2">
+                <h3 className="font-semibold text-gray-600">Step 3</h3>
+                <h1 className="font-bold text-xl pb-1 text-gray-800">
                   Learn Greetings in English
                 </h1>
-                <p>In this module, you will learn the basics of greetings in English.</p>
+                <p className="text-gray-600">In this module, you will learn the basics of greetings in English.</p> 
               </div>
             </div>
           </a>
         </div>
       </div>
+
+      {showCongrats && (
+        <div className="mt-4 p-4 bg-green-100 text-green-800 rounded-lg shadow-md">
+          🎉 Congrats! You've unlocked Step 3!
+        </div>
+      )}
 
       {/* Render Test2 component based on the active level */}
       {activeLevel && (
